@@ -4,6 +4,7 @@ class ApiConstants {
   static String get login => '$baseUrl/auth/login.php';
   static String get register => '$baseUrl/auth/register.php';
   static String get updateProfile => '$baseUrl/users/update_profile.php';
+  static String get searchUsers => '$baseUrl/users/search.php';
   static String get createPost => '$baseUrl/posts/create.php';
   static String get readPosts => '$baseUrl/posts/read.php';
   static String get updatePost => '$baseUrl/posts/update.php';
@@ -17,6 +18,9 @@ class ApiConstants {
   static String get unfollowUser => '$baseUrl/follows/unfollow.php';
   static String get getFollowStats => '$baseUrl/follows/stats.php';
   static String get getFollowList => '$baseUrl/follows/list.php';
+  static String get getConversations => '$baseUrl/messages/conversations.php';
+  static String get readMessages => '$baseUrl/messages/read.php';
+  static String get sendMessage => '$baseUrl/messages/send.php';
 
   static String getImageUrl(String? path) {
     if (path == null || path.trim().isEmpty) return '';

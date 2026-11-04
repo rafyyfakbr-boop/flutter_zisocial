@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zisocial/core/constant.dart';
+import 'package:zisocial/view/dm_view.dart';
 import 'package:zisocial/view/follow_list_view.dart';
 import 'package:zisocial/view/post_detail_view.dart';
 import 'package:zisocial/viewmodel/follow_viewmodel.dart';
@@ -228,48 +229,95 @@ class _UserProfileViewState extends State<UserProfileView> {
 
                   const SizedBox(height: 20),
 
-                  // Tombol Follow / Unfollow (atau label jika akun sendiri)
+                  // Tombol Follow / Unfollow + Kirim Pesan (atau label jika akun sendiri)
                   if (!isMe)
-                    SizedBox(
-                      width: double.infinity,
-                      child: isFollowing
-                          ? OutlinedButton.icon(
-                              onPressed: () {
-                                followVM.toggleFollow(widget.userId, currentUserId);
-                              },
-                              icon: const Icon(Icons.check, size: 18),
-                              label: const Text(
-                                'Mengikuti',
-                                style: TextStyle(fontWeight: FontWeight.w700),
-                              ),
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: const Color(0xFF374151),
-                                side: const BorderSide(color: Color(0xFFD1D5DB)),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: isFollowing
+                              ? OutlinedButton.icon(
+                                  onPressed: () {
+                                    followVM.toggleFollow(
+                                        widget.userId, currentUserId);
+                                  },
+                                  icon: const Icon(Icons.check, size: 18),
+                                  label: const Text(
+                                    'Mengikuti',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w700),
+                                  ),
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: const Color(0xFF374151),
+                                    side: const BorderSide(
+                                        color: Color(0xFFD1D5DB)),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12),
+                                  ),
+                                )
+                              : ElevatedButton.icon(
+                                  onPressed: () {
+                                    followVM.toggleFollow(
+                                        widget.userId, currentUserId);
+                                  },
+                                  icon: const Icon(
+                                      Icons.person_add_alt_1_outlined,
+                                      size: 18),
+                                  label: const Text(
+                                    'Ikuti',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w700),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: _primary,
+                                    foregroundColor: Colors.white,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12),
+                                  ),
                                 ),
-                                padding: const EdgeInsets.symmetric(vertical: 12),
-                              ),
-                            )
-                          : ElevatedButton.icon(
-                              onPressed: () {
-                                followVM.toggleFollow(widget.userId, currentUserId);
-                              },
-                              icon: const Icon(Icons.person_add_alt_1_outlined, size: 18),
-                              label: const Text(
-                                'Ikuti',
-                                style: TextStyle(fontWeight: FontWeight.w700),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: _primary,
-                                foregroundColor: Colors.white,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => DmChatView(
+                                    partnerId: widget.userId,
+                                    partnerUsername: widget.username,
+                                    partnerName: widget.name,
+                                    partnerAvatar: resolvedAvatarUrl,
+                                    partnerBio: widget.bio,
+                                  ),
                                 ),
-                                padding: const EdgeInsets.symmetric(vertical: 12),
-                              ),
+                              );
+                            },
+                            icon: const Icon(
+                                Icons.chat_bubble_outline_rounded,
+                                size: 18),
+                            label: const Text(
+                              'Pesan',
+                              style: TextStyle(fontWeight: FontWeight.w700),
                             ),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: _primary,
+                              side: const BorderSide(color: _primary),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                          ),
+                        ),
+                      ],
                     )
                   else
                     Container(

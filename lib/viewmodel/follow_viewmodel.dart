@@ -75,6 +75,38 @@ class FollowViewModel extends ChangeNotifier {
     return users;
   }
 
+  /// Cari pengguna berdasarkan kata kunci [query] (nama / username).
+  Future<List<FollowUserModel>> searchUsers(
+    String query,
+    int viewerId,
+  ) async {
+    final encoded = Uri.encodeQueryComponent(query.trim());
+    final response = await _apiClient.get(
+      '${ApiConstants.searchUsers}?q=$encoded&viewer_id=$viewerId',
+    );
+    final raw = response['data'];
+    if (raw is! List) return [];
+
+    final users = <FollowUserModel>[];
+    for (final item in raw) {
+      if (item is! Map) continue;
+      final map = Map<String, dynamic>.from(item);
+      final user = FollowUserModel.fromJson(map);
+      users.add(user);
+
+      final isFollowing = map['is_following'] == true ||
+          map['is_following']?.toString() == '1';
+      final current = _stats[user.id];
+      _stats[user.id] = FollowStatsModel(
+        followersCount: current?.followersCount ?? 0,
+        followingCount: current?.followingCount ?? 0,
+        isFollowing: isFollowing,
+      );
+    }
+    notifyListeners();
+    return users;
+  }
+
   /// Update angka "following" milik user yang login secara lokal.
   void _adjustOwnFollowing(int followerId, int delta) {
     final own = _stats[followerId];

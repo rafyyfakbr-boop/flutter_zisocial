@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,6 +7,7 @@ import 'package:zisocial/viewmodel/comment_viewmodel.dart';
 import 'package:zisocial/viewmodel/create_post_viewmodel.dart';
 import 'package:zisocial/viewmodel/follow_viewmodel.dart';
 import 'package:zisocial/viewmodel/login_viewmodel.dart';
+import 'package:zisocial/viewmodel/message_viewmodel.dart';
 import 'package:zisocial/viewmodel/post_viewmodel.dart';
 import 'package:zisocial/viewmodel/register_viewmodel.dart';
 
@@ -34,6 +34,9 @@ void main() {
         ),
         ChangeNotifierProvider(
           create: (_) => FollowViewModel(apiClient),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => MessageViewModel(apiClient),
         ),
       ],
       child: const MyApp(),

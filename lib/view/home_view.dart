@@ -1,16 +1,19 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zisocial/core/constant.dart';
 import 'package:zisocial/view/create_post_view.dart';
+import 'package:zisocial/view/dm_view.dart';
 import 'package:zisocial/view/edit_profile_view.dart';
 import 'package:zisocial/view/follow_list_view.dart';
 import 'package:zisocial/view/login_view.dart';
 import 'package:zisocial/view/post_detail_view.dart';
 import 'package:zisocial/viewmodel/follow_viewmodel.dart';
 import 'package:zisocial/viewmodel/login_viewmodel.dart';
+import 'package:zisocial/viewmodel/message_viewmodel.dart';
 import 'package:zisocial/viewmodel/post_viewmodel.dart';
+import 'package:zisocial/widget/animated_bottom_nav.dart';
 import 'package:zisocial/widget/post_card.dart';
+import 'package:zisocial/widget/search_users_section.dart';
 
 const Color primaryColor = Color(0xFF4F46E5);
 const Color mutedColor = Color(0xFF6B7280);
@@ -43,15 +46,12 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final uid = int.tryParse(context.read<LoginViewModel>().user?.id ?? '0') ?? 0;
+      final uid =
+          int.tryParse(context.read<LoginViewModel>().user?.id ?? '0') ?? 0;
       context.read<PostViewModel>().fetchPosts(userId: uid);
-      // Fetch follow stats untuk profil user yang login
-      final user = context.read<LoginViewModel>().user;
-      if (user != null) {
-        final userId = int.tryParse(user.id) ?? 0;
-        if (userId != 0) {
-          context.read<FollowViewModel>().fetchStats(userId, userId);
-        }
+      if (uid != 0) {
+        context.read<FollowViewModel>().fetchStats(uid, uid);
+        context.read<MessageViewModel>().fetchConversations(uid, silent: true);
       }
     });
   }
@@ -66,7 +66,9 @@ class _HomeViewState extends State<HomeView> {
 
     // Refresh feed postingan setelah kembali dari create post
     if (mounted) {
-      context.read<PostViewModel>().fetchPosts(isRefresh: true, userId: _currentUserId);
+      context
+          .read<PostViewModel>()
+          .fetchPosts(isRefresh: true, userId: _currentUserId);
     }
   }
 
@@ -115,6 +117,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     final user = context.watch<LoginViewModel>().user;
+    final unreadCount = context.watch<MessageViewModel>().totalUnreadCount;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -126,10 +129,16 @@ class _HomeViewState extends State<HomeView> {
         titleSpacing: 16,
         title: Row(
           children: [
-            _Avatar(
-              imageUrl: user?.avatar ?? '',
-              fallbackIcon: Icons.person,
-              size: 32,
+            GestureDetector(
+              onTap: () {
+                setState(() => _selectedTab = 1);
+                _refreshOwnStats();
+              },
+              child: _Avatar(
+                imageUrl: user?.avatar ?? '',
+                fallbackIcon: Icons.person,
+                size: 32,
+              ),
             ),
             const Spacer(),
             const Text(
@@ -142,20 +151,51 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             const Spacer(),
-            IconButton(
-              tooltip: 'Notifikasi',
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Fitur notifikasi belum tersedia.'),
+            // Tombol Direct Message (DM) di AppBar dengan badge
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                IconButton(
+                  tooltip: 'Pesan Langsung (DM)',
+                  onPressed: () {
+                    setState(() => _selectedTab = 3);
+                    if (_currentUserId != 0) {
+                      context
+                          .read<MessageViewModel>()
+                          .fetchConversations(_currentUserId);
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.chat_bubble_outline_rounded,
+                    color: Color(0xFF374151),
+                    size: 24,
                   ),
-                );
-              },
-              icon: const Icon(
-                Icons.notifications_none_outlined,
-                color: Color(0xFF374151),
-                size: 26,
-              ),
+                ),
+                if (unreadCount > 0)
+                  Positioned(
+                    right: 6,
+                    top: 6,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 1.5),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF7C3AED), Color(0xFF06B6D4)],
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.white, width: 1.5),
+                      ),
+                      child: Text(
+                        unreadCount > 99 ? '99+' : unreadCount.toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
             PopupMenuButton<String>(
               tooltip: 'Menu akun',
@@ -166,6 +206,8 @@ class _HomeViewState extends State<HomeView> {
               onSelected: (value) {
                 if (value == 'create') {
                   _openCreatePost();
+                } else if (value == 'edit_profile') {
+                  _openEditProfile();
                 } else if (value == 'logout') {
                   _logout();
                 }
@@ -174,6 +216,10 @@ class _HomeViewState extends State<HomeView> {
                 PopupMenuItem(
                   value: 'create',
                   child: Text('Buat postingan'),
+                ),
+                PopupMenuItem(
+                  value: 'edit_profile',
+                  child: Text('Edit profil'),
                 ),
                 PopupMenuItem(
                   value: 'logout',
@@ -190,6 +236,7 @@ class _HomeViewState extends State<HomeView> {
           _buildHomeFeed(user),
           _buildProfile(user),
           _buildSearch(),
+          const DmInboxView(showBackButton: false),
         ],
       ),
       floatingActionButton: _selectedTab == 0
@@ -201,40 +248,42 @@ class _HomeViewState extends State<HomeView> {
               child: const Icon(Icons.add),
             )
           : null,
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: AnimatedBottomNav(
         currentIndex: _selectedTab,
         onTap: (index) {
           setState(() => _selectedTab = index);
-          // Selalu ambil angka followers/following terbaru saat buka profil
           if (index == 1) _refreshOwnStats();
+          if (index == 3 && _currentUserId != 0) {
+            context.read<MessageViewModel>().fetchConversations(_currentUserId);
+          }
         },
-        backgroundColor: Colors.white,
-        selectedItemColor: primaryColor,
-        unselectedItemColor: const Color(0xFF6B7280),
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        type: BottomNavigationBarType.fixed,
-        elevation: 8,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home_rounded),
+        items: [
+          const AnimatedNavItem(
+            outlineIcon: Icons.home_outlined,
+            filledIcon: Icons.home_rounded,
             label: 'Home',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
+          const AnimatedNavItem(
+            outlineIcon: Icons.person_outline_rounded,
+            filledIcon: Icons.person_rounded,
             label: 'Profile',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            activeIcon: Icon(Icons.search_rounded),
+          const AnimatedNavItem(
+            outlineIcon: Icons.search_outlined,
+            filledIcon: Icons.search_rounded,
             label: 'Search',
+          ),
+          AnimatedNavItem(
+            outlineIcon: Icons.chat_bubble_outline_rounded,
+            filledIcon: Icons.chat_bubble_rounded,
+            label: 'DM',
+            badgeCount: unreadCount,
           ),
         ],
       ),
     );
   }
+
 
   Widget _buildHomeFeed(dynamic user) {
     final postViewModel = context.watch<PostViewModel>();
@@ -816,21 +865,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _buildSearch() {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: 'Cari pengguna...',
-          prefixIcon: const Icon(Icons.search),
-          filled: true,
-          fillColor: const Color(0xFFF3F4F6),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide.none,
-          ),
-        ),
-      ),
-    );
+    return const SearchUsersSection();
   }
 }
 
