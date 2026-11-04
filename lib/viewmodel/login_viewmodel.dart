@@ -26,7 +26,8 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await _apiClient.post(ApiConstants.login,
+      final response = await _apiClient.post(
+        ApiConstants.login,
         body: {
           'email': email,
           'password': password,
@@ -36,9 +37,68 @@ class LoginViewModel extends ChangeNotifier {
       return true;
     } catch (e) {
       _errorMessage = e.toString().replaceFirst(
-        'Exception: ',
-        '',
-      );
+            'Exception: ',
+            '',
+          );
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  /// Update foto profil, nama, username, dan bio.
+  Future<bool> updateProfile({
+    required String name,
+    required String username,
+    String? bio,
+    String? avatarFilePath,
+    Uint8List? avatarBytes,
+    String? avatarFileName,
+  }) async {
+    final currentUser = _user;
+    if (currentUser == null) return false;
+
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      Map<String, dynamic> response;
+
+      if ((avatarFilePath != null && avatarFilePath.isNotEmpty) ||
+          avatarBytes != null) {
+        response = await _apiClient.upload(
+          ApiConstants.updateProfile,
+          filePath: avatarFilePath ?? '',
+          fileBytes: avatarBytes,
+          fileName: avatarFileName,
+          fieldName: 'avatar',
+          fields: {
+            'user_id': currentUser.id,
+            'name': name,
+            'username': username,
+            if (bio != null) 'bio': bio,
+          },
+        );
+      } else {
+        response = await _apiClient.post(
+          ApiConstants.updateProfile,
+          body: {
+            'user_id': currentUser.id,
+            'name': name,
+            'username': username,
+            if (bio != null) 'bio': bio,
+          },
+        );
+      }
+
+      if (response['user'] is Map<String, dynamic>) {
+        _user = UserModel.fromJson(response['user'] as Map<String, dynamic>);
+      }
+      return true;
+    } catch (e) {
+      _errorMessage = e.toString().replaceFirst('Exception: ', '');
       return false;
     } finally {
       _isLoading = false;

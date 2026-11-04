@@ -18,6 +18,8 @@ class CreatePostViewModel extends ChangeNotifier {
   Future<bool> createPost({
     required int userId,
     required String imagePath,
+    Uint8List? imageBytes,
+    String? imageName,
     String caption = '',
   }) async {
     _isLoading = true;
@@ -30,6 +32,8 @@ class CreatePostViewModel extends ChangeNotifier {
       final response = await _apiClient.upload(
         ApiConstants.createPost,
         filePath: imagePath,
+        fileBytes: imageBytes,
+        fileName: imageName,
         fieldName: 'image',
         fields: {
           'user_id': userId.toString(),

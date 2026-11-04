@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,6 +21,7 @@ class _CreatePostViewState extends State<CreatePostView> {
   final ImagePicker _picker = ImagePicker();
 
   XFile? _selectedImage;
+  Uint8List? _selectedImageBytes;
 
   @override
   void dispose() {
@@ -39,9 +39,7 @@ class _CreatePostViewState extends State<CreatePostView> {
       return;
     }
 
-    final file = File(image.path);
-
-    final fileSize = await file.length();
+    final fileSize = await image.length();
 
     // Maksimal 5 MB
     if (fileSize > 5 * 1024 * 1024) {
@@ -59,7 +57,7 @@ class _CreatePostViewState extends State<CreatePostView> {
     }
 
     // Cek ekstensi file
-    final extension = image.path
+    final extension = image.name
         .split('.')
         .last
         .toLowerCase();
@@ -78,8 +76,11 @@ class _CreatePostViewState extends State<CreatePostView> {
       return;
     }
 
+    final bytes = await image.readAsBytes();
+
     setState(() {
       _selectedImage = image;
+      _selectedImageBytes = bytes;
     });
   }
 
@@ -118,6 +119,8 @@ class _CreatePostViewState extends State<CreatePostView> {
         .createPost(
           userId: int.parse(user.id),
           imagePath: _selectedImage!.path,
+          imageBytes: _selectedImageBytes,
+          imageName: _selectedImage!.name,
           caption: _captionController.text.trim(),
         );
 
@@ -166,11 +169,11 @@ class _CreatePostViewState extends State<CreatePostView> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Preview gambar
-            if (_selectedImage != null)
+            if (_selectedImageBytes != null)
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.file(
-                  File(_selectedImage!.path),
+                child: Image.memory(
+                  _selectedImageBytes!,
                   height: 300,
                   width: double.infinity,
                   fit: BoxFit.cover,

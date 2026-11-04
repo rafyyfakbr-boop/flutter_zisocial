@@ -118,7 +118,7 @@ class _RegisterViewState extends State<RegisterView> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 20,
                         offset: const Offset(0, 8),
                       ),
@@ -321,7 +321,7 @@ class _RegisterViewState extends State<RegisterView> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: _primaryColor,
                               disabledBackgroundColor:
-                                  _primaryColor.withOpacity(0.6),
+                                  _primaryColor.withValues(alpha: 0.6),
                               foregroundColor: Colors.white,
                               elevation: 0,
                               shape: RoundedRectangleBorder(

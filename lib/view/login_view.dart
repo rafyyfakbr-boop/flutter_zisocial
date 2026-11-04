@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:zisocial/view/home_view.dart';
 import 'package:zisocial/viewmodel/login_viewmodel.dart';
 import 'package:zisocial/widget/app_button.dart';
+import 'package:zisocial/view/register_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -33,9 +34,7 @@ class _LoginViewState extends State<LoginView> {
 
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Email dan password wajib diisi.'),
-        ),
+        const SnackBar(content: Text('Email dan password wajib diisi.')),
       );
       return;
     }
@@ -55,9 +54,9 @@ class _LoginViewState extends State<LoginView> {
     } else {
       final errorMessage = context.read<LoginViewModel>().errorMessage;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage ?? 'Login gagal.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(errorMessage ?? 'Login gagal.')));
     }
   }
 
@@ -79,7 +78,7 @@ class _LoginViewState extends State<LoginView> {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
@@ -103,10 +102,7 @@ class _LoginViewState extends State<LoginView> {
                   Text(
                     'Welcome back. Please enter your details.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey.shade600,
-                    ),
+                    style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
                   ),
 
                   const Gap(24),
@@ -129,8 +125,7 @@ class _LoginViewState extends State<LoginView> {
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding:
-                          const EdgeInsets.symmetric(vertical: 14),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 14),
                     ),
                   ),
 
@@ -167,8 +162,7 @@ class _LoginViewState extends State<LoginView> {
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding:
-                          const EdgeInsets.symmetric(vertical: 14),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 14),
                     ),
                   ),
 
@@ -229,9 +223,14 @@ class _LoginViewState extends State<LoginView> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          // TODO: navigasi ke halaman register
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const RegisterView(),
+                            ),
+                          );
                         },
-                        child: Text(
+                        child: const Text(
                           'Create an account',
                           style: TextStyle(
                             fontSize: 13,
