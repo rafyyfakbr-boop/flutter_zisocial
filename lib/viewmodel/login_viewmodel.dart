@@ -78,7 +78,7 @@ class LoginViewModel extends ChangeNotifier {
             'user_id': currentUser.id,
             'name': name,
             'username': username,
-            if (bio != null) 'bio': bio,
+            'bio': ?bio,
           },
         );
       } else {
@@ -88,7 +88,7 @@ class LoginViewModel extends ChangeNotifier {
             'user_id': currentUser.id,
             'name': name,
             'username': username,
-            if (bio != null) 'bio': bio,
+            'bio': ?bio,
           },
         );
       }
