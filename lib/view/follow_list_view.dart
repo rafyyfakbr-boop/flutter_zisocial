@@ -36,8 +36,11 @@ class FollowListView extends StatelessWidget {
           elevation: 0,
           centerTitle: true,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new,
-                size: 20, color: Color(0xFF111827)),
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              size: 20,
+              color: Color(0xFF111827),
+            ),
             onPressed: () => Navigator.pop(context),
           ),
           title: Text(
@@ -98,9 +101,11 @@ class _FollowListState extends State<_FollowList>
   }
 
   Future<List<FollowUserModel>> _load() {
-    return context
-        .read<FollowViewModel>()
-        .fetchFollowList(widget.userId, _viewerId, type: widget.type);
+    return context.read<FollowViewModel>().fetchFollowList(
+      widget.userId,
+      _viewerId,
+      type: widget.type,
+    );
   }
 
   Future<void> _refresh() async {
@@ -202,7 +207,8 @@ class _UserTile extends StatelessWidget {
         int.tryParse(context.watch<LoginViewModel>().user?.id ?? '0') ?? 0;
     final isMe = user.id == viewerId;
     final avatarUrl = user.fullAvatarUrl;
-    final hasAvatar = avatarUrl.startsWith('http') &&
+    final hasAvatar =
+        avatarUrl.startsWith('http') &&
         !avatarUrl.contains('url-ke-gambar.com');
     final displayName = user.name.isNotEmpty ? user.name : user.username;
 
@@ -227,8 +233,10 @@ class _UserTile extends StatelessWidget {
         backgroundColor: const Color(0xFFEEF2FF),
         onBackgroundImageError: hasAvatar ? (_, _) {} : null,
         backgroundImage: hasAvatar
-            ? NetworkImage(avatarUrl,
-                headers: const {'ngrok-skip-browser-warning': 'true'})
+            ? NetworkImage(
+                avatarUrl,
+                headers: const {'ngrok-skip-browser-warning': 'true'},
+              )
             : null,
         child: hasAvatar
             ? null
@@ -274,15 +282,18 @@ class _UserTile extends StatelessWidget {
                           style: OutlinedButton.styleFrom(
                             foregroundColor: const Color(0xFF374151),
                             side: const BorderSide(color: Color(0xFFD1D5DB)),
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 14),
+                            padding: const EdgeInsets.symmetric(horizontal: 14),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: const Text('Mengikuti',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w700, fontSize: 12)),
+                          child: const Text(
+                            'Mengikuti',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 12,
+                            ),
+                          ),
                         )
                       : ElevatedButton(
                           onPressed: () =>
@@ -291,15 +302,18 @@ class _UserTile extends StatelessWidget {
                             backgroundColor: _primary,
                             foregroundColor: Colors.white,
                             elevation: 0,
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 18),
+                            padding: const EdgeInsets.symmetric(horizontal: 18),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: const Text('Ikuti',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w700, fontSize: 12)),
+                          child: const Text(
+                            'Ikuti',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 12,
+                            ),
+                          ),
                         ),
                 );
               },
@@ -307,4 +321,3 @@ class _UserTile extends StatelessWidget {
     );
   }
 }
-

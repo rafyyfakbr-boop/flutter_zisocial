@@ -77,7 +77,8 @@ class _UserProfileViewState extends State<UserProfileView> {
         .toList();
 
     final resolvedAvatarUrl = ApiConstants.getImageUrl(widget.avatarUrl);
-    final hasValidAvatar = resolvedAvatarUrl.isNotEmpty &&
+    final hasValidAvatar =
+        resolvedAvatarUrl.isNotEmpty &&
         !resolvedAvatarUrl.contains('url-ke-gambar.com') &&
         resolvedAvatarUrl.startsWith('http');
 
@@ -88,7 +89,11 @@ class _UserProfileViewState extends State<UserProfileView> {
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, size: 20, color: Color(0xFF111827)),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            size: 20,
+            color: Color(0xFF111827),
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -138,12 +143,15 @@ class _UserProfileViewState extends State<UserProfileView> {
                       child: CircleAvatar(
                         radius: 42,
                         backgroundColor: const Color(0xFFEEF2FF),
-                        onBackgroundImageError:
-                            hasValidAvatar ? (_, _) {} : null,
+                        onBackgroundImageError: hasValidAvatar
+                            ? (_, _) {}
+                            : null,
                         backgroundImage: hasValidAvatar
                             ? NetworkImage(
                                 resolvedAvatarUrl,
-                                headers: const {'ngrok-skip-browser-warning': 'true'},
+                                headers: const {
+                                  'ngrok-skip-browser-warning': 'true',
+                                },
                               )
                             : null,
                         child: !hasValidAvatar
@@ -151,8 +159,8 @@ class _UserProfileViewState extends State<UserProfileView> {
                                 (widget.name.isNotEmpty
                                         ? widget.name[0]
                                         : (widget.username.isNotEmpty
-                                            ? widget.username[0]
-                                            : 'U'))
+                                              ? widget.username[0]
+                                              : 'U'))
                                     .toUpperCase(),
                                 style: const TextStyle(
                                   color: _primary,
@@ -238,37 +246,46 @@ class _UserProfileViewState extends State<UserProfileView> {
                               ? OutlinedButton.icon(
                                   onPressed: () {
                                     followVM.toggleFollow(
-                                        widget.userId, currentUserId);
+                                      widget.userId,
+                                      currentUserId,
+                                    );
                                   },
                                   icon: const Icon(Icons.check, size: 18),
                                   label: const Text(
                                     'Mengikuti',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w700),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                                   style: OutlinedButton.styleFrom(
                                     foregroundColor: const Color(0xFF374151),
                                     side: const BorderSide(
-                                        color: Color(0xFFD1D5DB)),
+                                      color: Color(0xFFD1D5DB),
+                                    ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     padding: const EdgeInsets.symmetric(
-                                        vertical: 12),
+                                      vertical: 12,
+                                    ),
                                   ),
                                 )
                               : ElevatedButton.icon(
                                   onPressed: () {
                                     followVM.toggleFollow(
-                                        widget.userId, currentUserId);
+                                      widget.userId,
+                                      currentUserId,
+                                    );
                                   },
                                   icon: const Icon(
-                                      Icons.person_add_alt_1_outlined,
-                                      size: 18),
+                                    Icons.person_add_alt_1_outlined,
+                                    size: 18,
+                                  ),
                                   label: const Text(
                                     'Ikuti',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w700),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: _primary,
@@ -278,7 +295,8 @@ class _UserProfileViewState extends State<UserProfileView> {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     padding: const EdgeInsets.symmetric(
-                                        vertical: 12),
+                                      vertical: 12,
+                                    ),
                                   ),
                                 ),
                         ),
@@ -300,8 +318,9 @@ class _UserProfileViewState extends State<UserProfileView> {
                               );
                             },
                             icon: const Icon(
-                                Icons.chat_bubble_outline_rounded,
-                                size: 18),
+                              Icons.chat_bubble_outline_rounded,
+                              size: 18,
+                            ),
                             label: const Text(
                               'Pesan',
                               style: TextStyle(fontWeight: FontWeight.w700),
@@ -312,8 +331,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 12),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
                             ),
                           ),
                         ),
@@ -321,7 +339,10 @@ class _UserProfileViewState extends State<UserProfileView> {
                     )
                   else
                     Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 16,
+                      ),
                       decoration: BoxDecoration(
                         color: const Color(0xFFF3F4F6),
                         borderRadius: BorderRadius.circular(8),
@@ -380,48 +401,45 @@ class _UserProfileViewState extends State<UserProfileView> {
             SliverPadding(
               padding: const EdgeInsets.all(2),
               sliver: SliverGrid(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final post = userPosts[index];
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => PostDetailView(post: post),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.all(1.5),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFF3F4F6),
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final post = userPosts[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => PostDetailView(post: post),
                         ),
-                        child: post.fullImageUrl.isNotEmpty
-                            ? Image.network(
-                                post.fullImageUrl,
-                                headers: const {'ngrok-skip-browser-warning': 'true'},
-                                fit: BoxFit.cover,
-                                errorBuilder: (ctx, _, e) => const Center(
-                                  child: Icon(
-                                    Icons.broken_image_outlined,
-                                    color: _muted,
-                                    size: 28,
-                                  ),
-                                ),
-                              )
-                            : const Center(
+                      );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.all(1.5),
+                      decoration: const BoxDecoration(color: Color(0xFFF3F4F6)),
+                      child: post.fullImageUrl.isNotEmpty
+                          ? Image.network(
+                              post.fullImageUrl,
+                              headers: const {
+                                'ngrok-skip-browser-warning': 'true',
+                              },
+                              fit: BoxFit.cover,
+                              errorBuilder: (ctx, _, e) => const Center(
                                 child: Icon(
-                                  Icons.image_not_supported_outlined,
+                                  Icons.broken_image_outlined,
                                   color: _muted,
                                   size: 28,
                                 ),
                               ),
-                      ),
-                    );
-                  },
-                  childCount: userPosts.length,
-                ),
+                            )
+                          : const Center(
+                              child: Icon(
+                                Icons.image_not_supported_outlined,
+                                color: _muted,
+                                size: 28,
+                              ),
+                            ),
+                    ),
+                  );
+                }, childCount: userPosts.length),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   crossAxisSpacing: 0,

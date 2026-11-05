@@ -32,8 +32,9 @@ class CommentViewModel extends ChangeNotifier {
 
       if (response.containsKey('data') && response['data'] is List) {
         final List<dynamic> dataList = response['data'];
-        _commentsByPost[postId] =
-            dataList.map((item) => CommentModel.fromJson(item)).toList();
+        _commentsByPost[postId] = dataList
+            .map((item) => CommentModel.fromJson(item))
+            .toList();
       } else {
         _commentsByPost[postId] ??= [];
       }
@@ -74,20 +75,13 @@ class CommentViewModel extends ChangeNotifier {
           : null,
     );
 
-    _commentsByPost[postId] = [
-      ...(_commentsByPost[postId] ?? []),
-      newComment,
-    ];
+    _commentsByPost[postId] = [...(_commentsByPost[postId] ?? []), newComment];
     notifyListeners();
 
     try {
       await _apiClient.post(
         ApiConstants.createComment,
-        body: {
-          'user_id': userId,
-          'post_id': postId,
-          'text': text.trim(),
-        },
+        body: {'user_id': userId, 'post_id': postId, 'text': text.trim()},
       );
       return true;
     } catch (e) {
@@ -103,8 +97,9 @@ class CommentViewModel extends ChangeNotifier {
     required int postId,
   }) async {
     final currentList = _commentsByPost[postId] ?? [];
-    _commentsByPost[postId] =
-        currentList.where((c) => c.id != commentId).toList();
+    _commentsByPost[postId] = currentList
+        .where((c) => c.id != commentId)
+        .toList();
     notifyListeners();
 
     try {

@@ -7,10 +7,7 @@ import 'package:zisocial/widget/post_card.dart';
 class PostDetailView extends StatelessWidget {
   final PostModel post;
 
-  const PostDetailView({
-    super.key,
-    required this.post,
-  });
+  const PostDetailView({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +26,11 @@ class PostDetailView extends StatelessWidget {
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, size: 20, color: Color(0xFF111827)),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            size: 20,
+            color: Color(0xFF111827),
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         bottom: const PreferredSize(
@@ -51,7 +52,11 @@ class PostDetailView extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.info_outline, size: 48, color: Colors.grey.shade400),
+                  Icon(
+                    Icons.info_outline,
+                    size: 48,
+                    color: Colors.grey.shade400,
+                  ),
                   const SizedBox(height: 12),
                   const Text(
                     'Postingan ini sudah dihapus.',
@@ -63,10 +68,7 @@ class PostDetailView extends StatelessWidget {
           }
 
           return SingleChildScrollView(
-            child: PostCard(
-              key: ValueKey(currentPost.id),
-              post: currentPost,
-            ),
+            child: PostCard(key: ValueKey(currentPost.id), post: currentPost),
           );
         },
       ),

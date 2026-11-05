@@ -35,10 +35,10 @@ class _EditPostViewState extends State<EditPostView> {
     setState(() => _isSaving = true);
 
     final success = await context.read<PostViewModel>().updatePost(
-          postId: widget.post.id,
-          userId: userId,
-          caption: caption,
-        );
+      postId: widget.post.id,
+      userId: userId,
+      caption: caption,
+    );
 
     if (!mounted) return;
     setState(() => _isSaving = false);
@@ -92,7 +92,10 @@ class _EditPostViewState extends State<EditPostView> {
               : TextButton(
                   onPressed: () {
                     final userId =
-                        int.tryParse(widget.post.author?.id.toString() ?? '0') ?? 0;
+                        int.tryParse(
+                          widget.post.author?.id.toString() ?? '0',
+                        ) ??
+                        0;
                     _save(userId);
                   },
                   child: const Text(

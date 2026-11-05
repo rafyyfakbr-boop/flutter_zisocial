@@ -50,41 +50,53 @@ class HeartPopOverlayState extends State<HeartPopOverlay>
     _scale = TweenSequence<double>([
       // Pop masuk melewati ukuran normal
       TweenSequenceItem(
-        tween: Tween(begin: 0.0, end: 1.25)
-            .chain(CurveTween(curve: Curves.easeOutBack)),
+        tween: Tween(
+          begin: 0.0,
+          end: 1.25,
+        ).chain(CurveTween(curve: Curves.easeOutBack)),
         weight: 18,
       ),
       // Memantul balik
       TweenSequenceItem(
-        tween: Tween(begin: 1.25, end: 0.92)
-            .chain(CurveTween(curve: Curves.easeInOut)),
+        tween: Tween(
+          begin: 1.25,
+          end: 0.92,
+        ).chain(CurveTween(curve: Curves.easeInOut)),
         weight: 10,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 0.92, end: 1.0)
-            .chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween(
+          begin: 0.92,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 8,
       ),
       // Tahan sebentar
       TweenSequenceItem(tween: ConstantTween(1.0), weight: 34),
       // Mengecil sambil terbang
       TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 0.55)
-            .chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween(
+          begin: 1.0,
+          end: 0.55,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 30,
       ),
     ]).animate(_controller);
 
     _opacity = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween(begin: 0.0, end: 1.0)
-            .chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween(
+          begin: 0.0,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 10,
       ),
       TweenSequenceItem(tween: ConstantTween(1.0), weight: 65),
       TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 0.0)
-            .chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween(
+          begin: 1.0,
+          end: 0.0,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 25,
       ),
     ]).animate(_controller);
@@ -92,8 +104,10 @@ class HeartPopOverlayState extends State<HeartPopOverlay>
     _lift = TweenSequence<double>([
       TweenSequenceItem(tween: ConstantTween(0.0), weight: 70),
       TweenSequenceItem(
-        tween: Tween(begin: 0.0, end: -90.0)
-            .chain(CurveTween(curve: Curves.easeInCubic)),
+        tween: Tween(
+          begin: 0.0,
+          end: -90.0,
+        ).chain(CurveTween(curve: Curves.easeInCubic)),
         weight: 30,
       ),
     ]).animate(_controller);
@@ -145,10 +159,7 @@ class HeartPopOverlayState extends State<HeartPopOverlay>
               offset: Offset(0, _lift.value),
               child: Transform.rotate(
                 angle: _tilt * _tiltProgress.value,
-                child: Transform.scale(
-                  scale: _scale.value,
-                  child: child,
-                ),
+                child: Transform.scale(scale: _scale.value, child: child),
               ),
             ),
           );
@@ -204,18 +215,24 @@ class _AnimatedLikeIconState extends State<AnimatedLikeIcon>
     );
     _scale = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 0.7)
-            .chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween(
+          begin: 1.0,
+          end: 0.7,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 20,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 0.7, end: 1.3)
-            .chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween(
+          begin: 0.7,
+          end: 1.3,
+        ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 35,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 1.3, end: 1.0)
-            .chain(CurveTween(curve: Curves.elasticOut)),
+        tween: Tween(
+          begin: 1.3,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.elasticOut)),
         weight: 45,
       ),
     ]).animate(_controller);
@@ -247,4 +264,3 @@ class _AnimatedLikeIconState extends State<AnimatedLikeIcon>
     );
   }
 }
-

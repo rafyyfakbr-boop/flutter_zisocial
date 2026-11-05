@@ -62,8 +62,8 @@ class FollowViewModel extends ChangeNotifier {
       final user = FollowUserModel.fromJson(map);
       users.add(user);
 
-      final isFollowing = map['is_following'] == true ||
-          map['is_following']?.toString() == '1';
+      final isFollowing =
+          map['is_following'] == true || map['is_following']?.toString() == '1';
       final current = _stats[user.id];
       _stats[user.id] = FollowStatsModel(
         followersCount: current?.followersCount ?? 0,
@@ -76,10 +76,7 @@ class FollowViewModel extends ChangeNotifier {
   }
 
   /// Cari pengguna berdasarkan kata kunci [query] (nama / username).
-  Future<List<FollowUserModel>> searchUsers(
-    String query,
-    int viewerId,
-  ) async {
+  Future<List<FollowUserModel>> searchUsers(String query, int viewerId) async {
     final encoded = Uri.encodeQueryComponent(query.trim());
     final response = await _apiClient.get(
       '${ApiConstants.searchUsers}?q=$encoded&viewer_id=$viewerId',
@@ -94,8 +91,8 @@ class FollowViewModel extends ChangeNotifier {
       final user = FollowUserModel.fromJson(map);
       users.add(user);
 
-      final isFollowing = map['is_following'] == true ||
-          map['is_following']?.toString() == '1';
+      final isFollowing =
+          map['is_following'] == true || map['is_following']?.toString() == '1';
       final current = _stats[user.id];
       _stats[user.id] = FollowStatsModel(
         followersCount: current?.followersCount ?? 0,

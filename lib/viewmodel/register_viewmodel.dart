@@ -42,10 +42,7 @@ class RegisterViewModel extends ChangeNotifier {
 
       return true;
     } catch (e) {
-      _errorMessage = e.toString().replaceFirst(
-        'Exception: ',
-        '',
-      );
+      _errorMessage = e.toString().replaceFirst('Exception: ', '');
 
       return false;
     } finally {

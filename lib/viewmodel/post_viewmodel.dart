@@ -128,11 +128,7 @@ class PostViewModel extends ChangeNotifier {
     try {
       await _apiClient.post(
         ApiConstants.updatePost,
-        body: {
-          'post_id': postId,
-          'user_id': userId,
-          'caption': caption,
-        },
+        body: {'post_id': postId, 'user_id': userId, 'caption': caption},
       );
       return true;
     } catch (_) {

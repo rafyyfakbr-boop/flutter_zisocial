@@ -56,9 +56,10 @@ class _SearchUsersSectionState extends State<SearchUsersSection> {
     setState(() => _isLoading = true);
 
     try {
-      final list = await context
-          .read<FollowViewModel>()
-          .searchUsers(query, _viewerId);
+      final list = await context.read<FollowViewModel>().searchUsers(
+        query,
+        _viewerId,
+      );
       if (!mounted) return;
       setState(() {
         _results = list;
@@ -94,8 +95,11 @@ class _SearchUsersSectionState extends State<SearchUsersSection> {
               prefixIcon: const Icon(Icons.search_rounded, color: _muted),
               suffixIcon: query.isNotEmpty
                   ? IconButton(
-                      icon: const Icon(Icons.close_rounded,
-                          size: 19, color: _muted),
+                      icon: const Icon(
+                        Icons.close_rounded,
+                        size: 19,
+                        color: _muted,
+                      ),
                       onPressed: () {
                         _searchController.clear();
                         _onQueryChanged('');
@@ -126,9 +130,7 @@ class _SearchUsersSectionState extends State<SearchUsersSection> {
         ),
         Expanded(
           child: _isLoading && !_hasLoadedInitial
-              ? const Center(
-                  child: CircularProgressIndicator(color: _primary),
-                )
+              ? const Center(child: CircularProgressIndicator(color: _primary))
               : RefreshIndicator(
                   color: _primary,
                   onRefresh: () => _performSearch(_searchController.text),
@@ -137,8 +139,11 @@ class _SearchUsersSectionState extends State<SearchUsersSection> {
                           physics: const AlwaysScrollableScrollPhysics(),
                           children: [
                             const SizedBox(height: 90),
-                            Icon(Icons.person_search_outlined,
-                                size: 58, color: Colors.grey.shade400),
+                            Icon(
+                              Icons.person_search_outlined,
+                              size: 58,
+                              color: Colors.grey.shade400,
+                            ),
                             const SizedBox(height: 12),
                             Text(
                               query.isEmpty
@@ -188,7 +193,8 @@ class _SearchUserTile extends StatelessWidget {
         int.tryParse(context.watch<LoginViewModel>().user?.id ?? '0') ?? 0;
     final isMe = user.id == viewerId;
     final avatarUrl = user.fullAvatarUrl;
-    final hasAvatar = avatarUrl.startsWith('http') &&
+    final hasAvatar =
+        avatarUrl.startsWith('http') &&
         !avatarUrl.contains('url-ke-gambar.com');
     final displayName = user.name.isNotEmpty ? user.name : user.username;
 
@@ -288,10 +294,12 @@ class _SearchUserTile extends StatelessWidget {
                                   followVM.toggleFollow(user.id, viewerId),
                               style: OutlinedButton.styleFrom(
                                 foregroundColor: const Color(0xFF374151),
-                                side:
-                                    const BorderSide(color: Color(0xFFD1D5DB)),
+                                side: const BorderSide(
+                                  color: Color(0xFFD1D5DB),
+                                ),
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 12),
+                                  horizontal: 12,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
@@ -312,7 +320,8 @@ class _SearchUserTile extends StatelessWidget {
                                 foregroundColor: Colors.white,
                                 elevation: 0,
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 15),
+                                  horizontal: 15,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
@@ -333,4 +342,3 @@ class _SearchUserTile extends StatelessWidget {
     );
   }
 }
-

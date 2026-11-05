@@ -46,31 +46,20 @@ class _CreatePostViewState extends State<CreatePostView> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Ukuran gambar maksimal 5MB.',
-          ),
-        ),
+        const SnackBar(content: Text('Ukuran gambar maksimal 5MB.')),
       );
 
       return;
     }
 
     // Cek ekstensi file
-    final extension = image.name
-        .split('.')
-        .last
-        .toLowerCase();
+    final extension = image.name.split('.').last.toLowerCase();
 
     if (extension != 'jpg' && extension != 'jpeg') {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Hanya gambar JPG yang diperbolehkan.',
-          ),
-        ),
+        const SnackBar(content: Text('Hanya gambar JPG yang diperbolehkan.')),
       );
 
       return;
@@ -88,11 +77,7 @@ class _CreatePostViewState extends State<CreatePostView> {
     // Pastikan gambar sudah dipilih
     if (_selectedImage == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Silakan pilih gambar terlebih dahulu.',
-          ),
-        ),
+        const SnackBar(content: Text('Silakan pilih gambar terlebih dahulu.')),
       );
 
       return;
@@ -102,67 +87,52 @@ class _CreatePostViewState extends State<CreatePostView> {
     final user = context.read<LoginViewModel>().user;
 
     if (user == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'User belum login.',
-          ),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('User belum login.')));
 
       return;
     }
 
     // Kirim postingan ke API
-    final success = await context
-        .read<CreatePostViewModel>()
-        .createPost(
-          userId: int.parse(user.id),
-          imagePath: _selectedImage!.path,
-          imageBytes: _selectedImageBytes,
-          imageName: _selectedImage!.name,
-          caption: _captionController.text.trim(),
-        );
+    final success = await context.read<CreatePostViewModel>().createPost(
+      userId: int.parse(user.id),
+      imagePath: _selectedImage!.path,
+      imageBytes: _selectedImageBytes,
+      imageName: _selectedImage!.name,
+      caption: _captionController.text.trim(),
+    );
 
     if (!mounted) return;
 
     if (success) {
-      final message = context
-              .read<CreatePostViewModel>()
-              .successMessage ??
+      final message =
+          context.read<CreatePostViewModel>().successMessage ??
           'Postingan berhasil dibuat.';
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
 
       // Kembali ke Home
       Navigator.pop(context);
     } else {
-      final message = context
-              .read<CreatePostViewModel>()
-              .errorMessage ??
+      final message =
+          context.read<CreatePostViewModel>().errorMessage ??
           'Gagal membuat postingan.';
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final isLoading =
-        context.watch<CreatePostViewModel>().isLoading;
+    final isLoading = context.watch<CreatePostViewModel>().isLoading;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Buat Postingan'),
-      ),
+      appBar: AppBar(title: const Text('Buat Postingan')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -184,30 +154,18 @@ class _CreatePostViewState extends State<CreatePostView> {
                 height: 300,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: Colors.grey,
-                  ),
+                  border: Border.all(color: Colors.grey),
                 ),
-                child: const Center(
-                  child: Text(
-                    'Belum ada gambar',
-                  ),
-                ),
+                child: const Center(child: Text('Belum ada gambar')),
               ),
 
             const Gap(16),
 
             // Tombol pilih gambar
             OutlinedButton.icon(
-              onPressed: isLoading
-                  ? null
-                  : _pickImage,
-              icon: const Icon(
-                Icons.image_outlined,
-              ),
-              label: const Text(
-                'Pilih Gambar',
-              ),
+              onPressed: isLoading ? null : _pickImage,
+              icon: const Icon(Icons.image_outlined),
+              label: const Text('Pilih Gambar'),
             ),
 
             const Gap(16),
@@ -217,9 +175,7 @@ class _CreatePostViewState extends State<CreatePostView> {
               controller: _captionController,
               labelText: 'Caption',
               hintText: 'Tulis caption...',
-              prefixIcon: const Icon(
-                Icons.edit_outlined,
-              ),
+              prefixIcon: const Icon(Icons.edit_outlined),
             ),
 
             const Gap(24),

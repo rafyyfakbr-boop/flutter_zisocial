@@ -17,27 +17,13 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => LoginViewModel(apiClient),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => RegisterViewModel(apiClient),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => CreatePostViewModel(apiClient),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => PostViewModel(apiClient),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => CommentViewModel(apiClient),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => FollowViewModel(apiClient),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => MessageViewModel(apiClient),
-        ),
+        ChangeNotifierProvider(create: (_) => LoginViewModel(apiClient)),
+        ChangeNotifierProvider(create: (_) => RegisterViewModel(apiClient)),
+        ChangeNotifierProvider(create: (_) => CreatePostViewModel(apiClient)),
+        ChangeNotifierProvider(create: (_) => PostViewModel(apiClient)),
+        ChangeNotifierProvider(create: (_) => CommentViewModel(apiClient)),
+        ChangeNotifierProvider(create: (_) => FollowViewModel(apiClient)),
+        ChangeNotifierProvider(create: (_) => MessageViewModel(apiClient)),
       ],
       child: const MyApp(),
     ),
@@ -53,9 +39,7 @@ class MyApp extends StatelessWidget {
       title: 'ZieSocial',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF4F46E5),
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4F46E5)),
         useMaterial3: true,
       ),
       home: const LoginView(),

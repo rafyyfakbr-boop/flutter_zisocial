@@ -44,26 +44,26 @@ class _RegisterViewState extends State<RegisterView> {
           password: _passwordController.text,
         )
         .then((success) {
-      if (!mounted) return;
+          if (!mounted) return;
 
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(viewModel.successMessage ?? 'Register berhasil'),
-          ),
-        );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginView()),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(viewModel.errorMessage ?? 'Register gagal'),
-          ),
-        );
-      }
-    });
+          if (success) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(viewModel.successMessage ?? 'Register berhasil'),
+              ),
+            );
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginView()),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(viewModel.errorMessage ?? 'Register gagal'),
+              ),
+            );
+          }
+        });
   }
 
   InputDecoration _inputDecoration({
@@ -109,7 +109,10 @@ class _RegisterViewState extends State<RegisterView> {
           children: [
             Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 24,
+                ),
                 child: Container(
                   constraints: const BoxConstraints(maxWidth: 400),
                   padding: const EdgeInsets.all(24),
@@ -320,8 +323,9 @@ class _RegisterViewState extends State<RegisterView> {
                                   },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: _primaryColor,
-                              disabledBackgroundColor:
-                                  _primaryColor.withValues(alpha: 0.6),
+                              disabledBackgroundColor: _primaryColor.withValues(
+                                alpha: 0.6,
+                              ),
                               foregroundColor: Colors.white,
                               elevation: 0,
                               shape: RoundedRectangleBorder(

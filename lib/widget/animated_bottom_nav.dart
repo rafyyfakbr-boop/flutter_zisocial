@@ -110,18 +110,24 @@ class _NavButtonState extends State<_NavButton>
     // Efek pop (mengecil sedikit -> membesar 1.25x -> kembali 1.0x)
     _popScale = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 0.85)
-            .chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween(
+          begin: 1.0,
+          end: 0.85,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 18,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 0.85, end: 1.26)
-            .chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween(
+          begin: 0.85,
+          end: 1.26,
+        ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 42,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 1.26, end: 1.0)
-            .chain(CurveTween(curve: Curves.elasticOut)),
+        tween: Tween(
+          begin: 1.26,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.elasticOut)),
         weight: 40,
       ),
     ]).animate(_controller);
@@ -248,9 +254,7 @@ class _NavButtonState extends State<_NavButton>
                   height: 5.5,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      colors: [_violet, _cyan],
-                    ),
+                    gradient: LinearGradient(colors: [_violet, _cyan]),
                   ),
                 ),
               ),
@@ -284,4 +288,3 @@ class _CenterCircleClipper extends CustomClipper<Rect> {
     return oldClipper.progress != progress;
   }
 }
-

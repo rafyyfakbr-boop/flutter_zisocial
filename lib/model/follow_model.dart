@@ -78,8 +78,8 @@ class FollowStatsModel {
           int.tryParse(map['followers_count']?.toString() ?? '0') ?? 0,
       followingCount:
           int.tryParse(map['following_count']?.toString() ?? '0') ?? 0,
-      isFollowing: map['is_following'] == true ||
-          map['is_following']?.toString() == '1',
+      isFollowing:
+          map['is_following'] == true || map['is_following']?.toString() == '1',
     );
   }
 }

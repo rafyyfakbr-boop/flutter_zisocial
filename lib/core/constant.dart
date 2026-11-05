@@ -1,5 +1,6 @@
 class ApiConstants {
-  static String baseUrl = 'https://iodize-tiny-icky.ngrok-free.dev/ziesocial/api';
+  static String baseUrl =
+      'https://iodize-tiny-icky.ngrok-free.dev/ziesocial/api';
 
   static String get login => '$baseUrl/auth/login.php';
   static String get register => '$baseUrl/auth/register.php';
@@ -21,6 +22,8 @@ class ApiConstants {
   static String get getConversations => '$baseUrl/messages/conversations.php';
   static String get readMessages => '$baseUrl/messages/read.php';
   static String get sendMessage => '$baseUrl/messages/send.php';
+  static String get updateMessage => '$baseUrl/messages/update.php';
+  static String get deleteMessage => '$baseUrl/messages/delete.php';
 
   static String getImageUrl(String? path) {
     if (path == null || path.trim().isEmpty) return '';
@@ -34,4 +37,7 @@ class ApiConstants {
     final cleanPath = trimmed.startsWith('/') ? trimmed : '/$trimmed';
     return '$hostUrl$cleanPath';
   }
+
+  static const String pusherApiKey = '4bd0794d9d6c703fed0a';
+  static const String pusherCluster = 'ap1';
 }

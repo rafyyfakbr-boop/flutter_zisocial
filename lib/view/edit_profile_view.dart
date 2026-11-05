@@ -147,7 +147,8 @@ class _EditProfileViewState extends State<EditProfileView> {
     final loginVM = context.watch<LoginViewModel>();
     final user = loginVM.user;
     final currentAvatarUrl = user?.fullAvatarUrl ?? '';
-    final hasExistingAvatar = currentAvatarUrl.startsWith('http') &&
+    final hasExistingAvatar =
+        currentAvatarUrl.startsWith('http') &&
         !currentAvatarUrl.contains('url-ke-gambar.com');
 
     return Scaffold(
@@ -157,8 +158,11 @@ class _EditProfileViewState extends State<EditProfileView> {
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new,
-              size: 20, color: Color(0xFF111827)),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            size: 20,
+            color: Color(0xFF111827),
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
@@ -212,14 +216,17 @@ class _EditProfileViewState extends State<EditProfileView> {
                             backgroundImage: _selectedAvatarBytes != null
                                 ? MemoryImage(_selectedAvatarBytes!)
                                 : (hasExistingAvatar
-                                    ? NetworkImage(
-                                        currentAvatarUrl,
-                                        headers: const {
-                                          'ngrok-skip-browser-warning': 'true',
-                                        },
-                                      ) as ImageProvider
-                                    : null),
-                            child: (_selectedAvatarBytes == null &&
+                                      ? NetworkImage(
+                                              currentAvatarUrl,
+                                              headers: const {
+                                                'ngrok-skip-browser-warning':
+                                                    'true',
+                                              },
+                                            )
+                                            as ImageProvider
+                                      : null),
+                            child:
+                                (_selectedAvatarBytes == null &&
                                     !hasExistingAvatar)
                                 ? const Icon(
                                     Icons.person,
@@ -327,8 +334,9 @@ class _EditProfileViewState extends State<EditProfileView> {
                   onPressed: loginVM.isLoading ? null : _saveProfile,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _primaryColor,
-                    disabledBackgroundColor:
-                        _primaryColor.withValues(alpha: 0.6),
+                    disabledBackgroundColor: _primaryColor.withValues(
+                      alpha: 0.6,
+                    ),
                     foregroundColor: Colors.white,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
@@ -341,8 +349,9 @@ class _EditProfileViewState extends State<EditProfileView> {
                           width: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2.5,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
                           ),
                         )
                       : const Text(
@@ -361,4 +370,3 @@ class _EditProfileViewState extends State<EditProfileView> {
     );
   }
 }
-

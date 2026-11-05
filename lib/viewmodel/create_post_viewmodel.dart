@@ -35,20 +35,14 @@ class CreatePostViewModel extends ChangeNotifier {
         fileBytes: imageBytes,
         fileName: imageName,
         fieldName: 'image',
-        fields: {
-          'user_id': userId.toString(),
-          'caption': caption,
-        },
+        fields: {'user_id': userId.toString(), 'caption': caption},
       );
 
       _successMessage = response['message'];
 
       return true;
     } catch (e) {
-      _errorMessage = e.toString().replaceFirst(
-            'Exception: ',
-            '',
-          );
+      _errorMessage = e.toString().replaceFirst('Exception: ', '');
 
       return false;
     } finally {

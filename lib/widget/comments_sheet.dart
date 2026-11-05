@@ -10,10 +10,7 @@ import 'package:zisocial/viewmodel/post_viewmodel.dart';
 class CommentsSheet extends StatefulWidget {
   final PostModel post;
 
-  const CommentsSheet({
-    super.key,
-    required this.post,
-  });
+  const CommentsSheet({super.key, required this.post});
 
   static void show(BuildContext context, PostModel post) {
     showModalBottomSheet(
@@ -69,11 +66,11 @@ class _CommentsSheetState extends State<CommentsSheet> {
     FocusScope.of(context).unfocus();
 
     final success = await context.read<CommentViewModel>().addComment(
-          postId: widget.post.id,
-          userId: userId,
-          text: text,
-          currentUser: user,
-        );
+      postId: widget.post.id,
+      userId: userId,
+      text: text,
+      currentUser: user,
+    );
 
     if (success && mounted) {
       context.read<PostViewModel>().updateCommentCount(widget.post.id, 1);
@@ -125,9 +122,9 @@ class _CommentsSheetState extends State<CommentsSheet> {
 
     if (shouldDelete == true && mounted) {
       await context.read<CommentViewModel>().deleteComment(
-            commentId: comment.id,
-            postId: widget.post.id,
-          );
+        commentId: comment.id,
+        postId: widget.post.id,
+      );
       if (mounted) {
         context.read<PostViewModel>().updateCommentCount(widget.post.id, -1);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -140,7 +137,12 @@ class _CommentsSheetState extends State<CommentsSheet> {
     }
   }
 
-  void _openUserProfile(int userId, String username, String name, String avatarUrl) {
+  void _openUserProfile(
+    int userId,
+    String username,
+    String name,
+    String avatarUrl,
+  ) {
     if (userId == 0) return;
     Navigator.push(
       context,
@@ -227,177 +229,186 @@ class _CommentsSheetState extends State<CommentsSheet> {
                     child: CircularProgressIndicator(color: pinkColor),
                   )
                 : comments.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(18),
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFFDF2F8),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.chat_bubble_outline_rounded,
+                            size: 40,
+                            color: pinkColor,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        const Text(
+                          'Belum ada komentar',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1F2937),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        const Text(
+                          'Jadilah yang pertama memulai percakapan!',
+                          style: TextStyle(fontSize: 13, color: mutedColor),
+                        ),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    itemCount: comments.length,
+                    itemBuilder: (context, index) {
+                      final comment = comments[index];
+                      final author = comment.author;
+                      final displayName = author?.name.isNotEmpty == true
+                          ? author!.name
+                          : (author?.username.isNotEmpty == true
+                                ? author!.username
+                                : 'Pengguna');
+                      final username = author?.username ?? '';
+                      final avatarUrl = author?.fullAvatarUrl ?? '';
+                      final hasValidAvatar =
+                          avatarUrl.isNotEmpty &&
+                          !avatarUrl.contains('url-ke-gambar.com') &&
+                          avatarUrl.startsWith('http');
+
+                      // Apakah komentar ini milik user yang sedang login?
+                      final isMyComment =
+                          (currentUser != null &&
+                          (comment.userId == currentUserId ||
+                              author?.id == currentUserId ||
+                              (username.isNotEmpty &&
+                                  username == currentUser.username)));
+
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              padding: const EdgeInsets.all(18),
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFFDF2F8),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.chat_bubble_outline_rounded,
-                                size: 40,
-                                color: pinkColor,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            const Text(
-                              'Belum ada komentar',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF1F2937),
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            const Text(
-                              'Jadilah yang pertama memulai percakapan!',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: mutedColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : ListView.builder(
-                        controller: _scrollController,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
-                        itemCount: comments.length,
-                        itemBuilder: (context, index) {
-                          final comment = comments[index];
-                          final author = comment.author;
-                          final displayName = author?.name.isNotEmpty == true
-                              ? author!.name
-                              : (author?.username.isNotEmpty == true
-                                  ? author!.username
-                                  : 'Pengguna');
-                          final username = author?.username ?? '';
-                          final avatarUrl = author?.fullAvatarUrl ?? '';
-                          final hasValidAvatar = avatarUrl.isNotEmpty &&
-                              !avatarUrl.contains('url-ke-gambar.com') &&
-                              avatarUrl.startsWith('http');
-
-                          // Apakah komentar ini milik user yang sedang login?
-                          final isMyComment = (currentUser != null &&
-                              (comment.userId == currentUserId ||
-                                  author?.id == currentUserId ||
-                                  (username.isNotEmpty &&
-                                      username == currentUser.username)));
-
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Avatar
-                                GestureDetector(
-                                  onTap: () {
-                                    final uid = author?.id ?? comment.userId;
-                                    _openUserProfile(uid, username, displayName, avatarUrl);
-                                  },
-                                  child: CircleAvatar(
-                                    radius: 17,
-                                    backgroundColor: const Color(0xFFFCE7F3),
-                                    onBackgroundImageError:
-                                        hasValidAvatar ? (_, _) {} : null,
-                                    backgroundImage: hasValidAvatar
-                                        ? NetworkImage(
-                                            avatarUrl,
-                                            headers: const {
-                                              'ngrok-skip-browser-warning': 'true',
-                                            },
-                                          )
-                                        : null,
-                                    child: !hasValidAvatar
-                                        ? Text(
-                                            displayName.isNotEmpty
-                                                ? displayName[0].toUpperCase()
-                                                : 'U',
-                                            style: const TextStyle(
-                                              color: pinkColor,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 13,
-                                            ),
-                                          )
-                                        : null,
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-
-                                // Komentar isi
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              final uid = author?.id ?? comment.userId;
-                                              _openUserProfile(uid, username, displayName, avatarUrl);
-                                            },
-                                            child: Text(
-                                              username.isNotEmpty
-                                                  ? username
-                                                  : displayName,
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 13,
-                                                color: Color(0xFF111827),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            comment.formattedTime,
-                                            style: const TextStyle(
-                                              color: mutedColor,
-                                              fontSize: 11,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 3),
-                                      Text(
-                                        comment.text,
+                            // Avatar
+                            GestureDetector(
+                              onTap: () {
+                                final uid = author?.id ?? comment.userId;
+                                _openUserProfile(
+                                  uid,
+                                  username,
+                                  displayName,
+                                  avatarUrl,
+                                );
+                              },
+                              child: CircleAvatar(
+                                radius: 17,
+                                backgroundColor: const Color(0xFFFCE7F3),
+                                onBackgroundImageError: hasValidAvatar
+                                    ? (_, _) {}
+                                    : null,
+                                backgroundImage: hasValidAvatar
+                                    ? NetworkImage(
+                                        avatarUrl,
+                                        headers: const {
+                                          'ngrok-skip-browser-warning': 'true',
+                                        },
+                                      )
+                                    : null,
+                                child: !hasValidAvatar
+                                    ? Text(
+                                        displayName.isNotEmpty
+                                            ? displayName[0].toUpperCase()
+                                            : 'U',
                                         style: const TextStyle(
+                                          color: pinkColor,
+                                          fontWeight: FontWeight.bold,
                                           fontSize: 13,
-                                          color: Color(0xFF374151),
-                                          height: 1.35,
+                                        ),
+                                      )
+                                    : null,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+
+                            // Komentar isi
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          final uid =
+                                              author?.id ?? comment.userId;
+                                          _openUserProfile(
+                                            uid,
+                                            username,
+                                            displayName,
+                                            avatarUrl,
+                                          );
+                                        },
+                                        child: Text(
+                                          username.isNotEmpty
+                                              ? username
+                                              : displayName,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 13,
+                                            color: Color(0xFF111827),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        comment.formattedTime,
+                                        style: const TextStyle(
+                                          color: mutedColor,
+                                          fontSize: 11,
                                         ),
                                       ),
                                     ],
                                   ),
-                                ),
-
-                                // Tombol Hapus Komentar (jika milik user sendiri)
-                                if (isMyComment)
-                                  IconButton(
-                                    tooltip: 'Hapus komentar',
-                                    iconSize: 18,
-                                    visualDensity: VisualDensity.compact,
-                                    padding: EdgeInsets.zero,
-                                    constraints: const BoxConstraints(),
-                                    icon: const Icon(
-                                      Icons.delete_outline_rounded,
-                                      color: Colors.redAccent,
+                                  const SizedBox(height: 3),
+                                  Text(
+                                    comment.text,
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      color: Color(0xFF374151),
+                                      height: 1.35,
                                     ),
-                                    onPressed: () =>
-                                        _confirmDeleteComment(comment),
                                   ),
-                              ],
+                                ],
+                              ),
                             ),
-                          );
-                        },
-                      ),
+
+                            // Tombol Hapus Komentar (jika milik user sendiri)
+                            if (isMyComment)
+                              IconButton(
+                                tooltip: 'Hapus komentar',
+                                iconSize: 18,
+                                visualDensity: VisualDensity.compact,
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                icon: const Icon(
+                                  Icons.delete_outline_rounded,
+                                  color: Colors.redAccent,
+                                ),
+                                onPressed: () => _confirmDeleteComment(comment),
+                              ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
           ),
 
           // 4. Input bar di bagian bawah
@@ -417,7 +428,8 @@ class _CommentsSheetState extends State<CommentsSheet> {
                   CircleAvatar(
                     radius: 17,
                     backgroundColor: const Color(0xFFFCE7F3),
-                    backgroundImage: (currentUser?.avatar != null &&
+                    backgroundImage:
+                        (currentUser?.avatar != null &&
                             currentUser!.avatar.startsWith('http') &&
                             !currentUser.avatar.contains('url-ke-gambar.com'))
                         ? NetworkImage(
@@ -427,15 +439,16 @@ class _CommentsSheetState extends State<CommentsSheet> {
                             },
                           )
                         : null,
-                    child: (currentUser?.avatar == null ||
+                    child:
+                        (currentUser?.avatar == null ||
                             !currentUser!.avatar.startsWith('http') ||
                             currentUser.avatar.contains('url-ke-gambar.com'))
                         ? Text(
                             (currentUser?.name.isNotEmpty == true
                                     ? currentUser!.name[0]
                                     : (currentUser?.username.isNotEmpty == true
-                                        ? currentUser!.username[0]
-                                        : 'U'))
+                                          ? currentUser!.username[0]
+                                          : 'U'))
                                 .toUpperCase(),
                             style: const TextStyle(
                               color: pinkColor,
@@ -459,10 +472,7 @@ class _CommentsSheetState extends State<CommentsSheet> {
                         controller: _commentController,
                         decoration: const InputDecoration(
                           hintText: 'Tambahkan komentar...',
-                          hintStyle: TextStyle(
-                            color: mutedColor,
-                            fontSize: 13,
-                          ),
+                          hintStyle: TextStyle(color: mutedColor, fontSize: 13),
                           border: InputBorder.none,
                           isDense: true,
                           contentPadding: EdgeInsets.symmetric(vertical: 10),

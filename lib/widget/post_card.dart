@@ -12,10 +12,7 @@ import 'package:zisocial/widget/like_animations.dart';
 class PostCard extends StatefulWidget {
   final PostModel post;
 
-  const PostCard({
-    super.key,
-    required this.post,
-  });
+  const PostCard({super.key, required this.post});
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -65,10 +62,13 @@ class _PostCardState extends State<PostCard> {
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Hapus Postingan?',
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
-        content:
-            const Text('Postingan akan dihapus permanen dan tidak bisa dikembalikan.'),
+        title: const Text(
+          'Hapus Postingan?',
+          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+        ),
+        content: const Text(
+          'Postingan akan dihapus permanen dan tidak bisa dikembalikan.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -77,22 +77,28 @@ class _PostCardState extends State<PostCard> {
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Hapus', style: TextStyle(fontWeight: FontWeight.w700)),
+            child: const Text(
+              'Hapus',
+              style: TextStyle(fontWeight: FontWeight.w700),
+            ),
           ),
         ],
       ),
     );
 
     if (confirm != true || !context.mounted) return;
-    final success = await context
-        .read<PostViewModel>()
-        .deletePost(widget.post.id, _currentUserId);
+    final success = await context.read<PostViewModel>().deletePost(
+      widget.post.id,
+      _currentUserId,
+    );
 
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            success ? 'Postingan berhasil dihapus.' : 'Gagal menghapus postingan.',
+            success
+                ? 'Postingan berhasil dihapus.'
+                : 'Gagal menghapus postingan.',
           ),
         ),
       );
@@ -102,9 +108,7 @@ class _PostCardState extends State<PostCard> {
   void _openEdit(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => EditPostView(post: widget.post),
-      ),
+      MaterialPageRoute(builder: (_) => EditPostView(post: widget.post)),
     );
   }
 
@@ -163,18 +167,23 @@ class _PostCardState extends State<PostCard> {
                     ),
                     child: Builder(
                       builder: (context) {
-                        final bool hasValidAvatar = avatarUrl.isNotEmpty &&
+                        final bool hasValidAvatar =
+                            avatarUrl.isNotEmpty &&
                             !avatarUrl.contains('url-ke-gambar.com') &&
                             avatarUrl.startsWith('http');
                         return CircleAvatar(
                           radius: 20,
                           backgroundColor: const Color(0xFFEEF2FF),
-                          onBackgroundImageError:
-                              hasValidAvatar ? (_, _) {} : null,
+                          onBackgroundImageError: hasValidAvatar
+                              ? (_, _) {}
+                              : null,
                           backgroundImage: hasValidAvatar
-                              ? NetworkImage(avatarUrl, headers: const {
-                                  'ngrok-skip-browser-warning': 'true',
-                                })
+                              ? NetworkImage(
+                                  avatarUrl,
+                                  headers: const {
+                                    'ngrok-skip-browser-warning': 'true',
+                                  },
+                                )
                               : null,
                           child: !hasValidAvatar
                               ? Text(
@@ -226,7 +235,10 @@ class _PostCardState extends State<PostCard> {
                   ),
                 ),
                 // Tombol Follow / Mengikuti untuk pengguna lain
-                if (!isOwner && currentUserId != 0 && author != null && author.id != 0) ...[
+                if (!isOwner &&
+                    currentUserId != 0 &&
+                    author != null &&
+                    author.id != 0) ...[
                   const SizedBox(width: 6),
                   Consumer<FollowViewModel>(
                     builder: (context, followVM, _) {
@@ -238,7 +250,9 @@ class _PostCardState extends State<PostCard> {
                         },
                         style: TextButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           minimumSize: Size.zero,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           shape: RoundedRectangleBorder(
@@ -287,12 +301,14 @@ class _PostCardState extends State<PostCard> {
                     } else if (value == 'share') {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content: Text('Tautan postingan disalin.')),
+                          content: Text('Tautan postingan disalin.'),
+                        ),
                       );
                     } else if (value == 'report') {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content: Text('Laporan Anda telah dikirim.')),
+                          content: Text('Laporan Anda telah dikirim.'),
+                        ),
                       );
                     }
                   },
@@ -300,43 +316,67 @@ class _PostCardState extends State<PostCard> {
                       ? [
                           const PopupMenuItem(
                             value: 'edit',
-                            child: Row(children: [
-                              Icon(Icons.edit_outlined,
-                                  size: 18, color: Color(0xFF374151)),
-                              SizedBox(width: 10),
-                              Text('Edit Postingan'),
-                            ]),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.edit_outlined,
+                                  size: 18,
+                                  color: Color(0xFF374151),
+                                ),
+                                SizedBox(width: 10),
+                                Text('Edit Postingan'),
+                              ],
+                            ),
                           ),
                           const PopupMenuItem(
                             value: 'delete',
-                            child: Row(children: [
-                              Icon(Icons.delete_outline,
-                                  size: 18, color: Colors.red),
-                              SizedBox(width: 10),
-                              Text('Hapus Postingan',
-                                  style: TextStyle(color: Colors.red)),
-                            ]),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.delete_outline,
+                                  size: 18,
+                                  color: Colors.red,
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  'Hapus Postingan',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ],
+                            ),
                           ),
                         ]
                       : [
                           const PopupMenuItem(
                             value: 'share',
-                            child: Row(children: [
-                              Icon(Icons.share_outlined,
-                                  size: 18, color: Color(0xFF374151)),
-                              SizedBox(width: 10),
-                              Text('Bagikan Postingan'),
-                            ]),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.share_outlined,
+                                  size: 18,
+                                  color: Color(0xFF374151),
+                                ),
+                                SizedBox(width: 10),
+                                Text('Bagikan Postingan'),
+                              ],
+                            ),
                           ),
                           const PopupMenuItem(
                             value: 'report',
-                            child: Row(children: [
-                              Icon(Icons.flag_outlined,
-                                  size: 18, color: Colors.red),
-                              SizedBox(width: 10),
-                              Text('Laporkan Postingan',
-                                  style: TextStyle(color: Colors.red)),
-                            ]),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.flag_outlined,
+                                  size: 18,
+                                  color: Colors.red,
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  'Laporkan Postingan',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                 ),
@@ -368,7 +408,7 @@ class _PostCardState extends State<PostCard> {
                                 child: CircularProgressIndicator(
                                   value: progress.expectedTotalBytes != null
                                       ? progress.cumulativeBytesLoaded /
-                                          progress.expectedTotalBytes!
+                                            progress.expectedTotalBytes!
                                       : null,
                                   color: primaryColor,
                                   strokeWidth: 2.5,
@@ -380,20 +420,30 @@ class _PostCardState extends State<PostCard> {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: const [
-                                    Icon(Icons.broken_image_outlined,
-                                        size: 48, color: mutedColor),
+                                    Icon(
+                                      Icons.broken_image_outlined,
+                                      size: 48,
+                                      color: mutedColor,
+                                    ),
                                     SizedBox(height: 8),
-                                    Text('Gagal memuat gambar',
-                                        style: TextStyle(
-                                            color: mutedColor, fontSize: 12)),
+                                    Text(
+                                      'Gagal memuat gambar',
+                                      style: TextStyle(
+                                        color: mutedColor,
+                                        fontSize: 12,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               );
                             },
                           )
                         : const Center(
-                            child: Icon(Icons.image_not_supported_outlined,
-                                size: 48, color: mutedColor),
+                            child: Icon(
+                              Icons.image_not_supported_outlined,
+                              size: 48,
+                              color: mutedColor,
+                            ),
                           ),
                   ),
                 ),
@@ -412,9 +462,10 @@ class _PostCardState extends State<PostCard> {
                 IconButton(
                   tooltip: 'Suka',
                   onPressed: () {
-                    context
-                        .read<PostViewModel>()
-                        .toggleLike(post.id, currentUserId);
+                    context.read<PostViewModel>().toggleLike(
+                      post.id,
+                      currentUserId,
+                    );
                   },
                   icon: AnimatedLikeIcon(
                     isLiked: post.isLiked,
@@ -425,8 +476,11 @@ class _PostCardState extends State<PostCard> {
                 IconButton(
                   tooltip: 'Komentar',
                   onPressed: () => CommentsSheet.show(context, post),
-                  icon: const Icon(Icons.chat_bubble_outline_rounded,
-                      color: Color(0xFF374151), size: 24),
+                  icon: const Icon(
+                    Icons.chat_bubble_outline_rounded,
+                    color: Color(0xFF374151),
+                    size: 24,
+                  ),
                 ),
                 // Tombol Share
                 IconButton(
@@ -434,11 +488,15 @@ class _PostCardState extends State<PostCard> {
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          content: Text('Tautan postingan berhasil disalin.')),
+                        content: Text('Tautan postingan berhasil disalin.'),
+                      ),
                     );
                   },
-                  icon: const Icon(Icons.send_rounded,
-                      color: Color(0xFF374151), size: 24),
+                  icon: const Icon(
+                    Icons.send_rounded,
+                    color: Color(0xFF374151),
+                    size: 24,
+                  ),
                 ),
                 const Spacer(),
                 // Tombol Bookmark
@@ -446,7 +504,10 @@ class _PostCardState extends State<PostCard> {
                   tooltip: 'Simpan',
                   onPressed: () {
                     final willBeSaved = !post.isSaved;
-                    context.read<PostViewModel>().toggleSave(post.id, currentUserId);
+                    context.read<PostViewModel>().toggleSave(
+                      post.id,
+                      currentUserId,
+                    );
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
@@ -462,7 +523,9 @@ class _PostCardState extends State<PostCard> {
                     post.isSaved
                         ? Icons.bookmark
                         : Icons.bookmark_border_rounded,
-                    color: post.isSaved ? primaryColor : const Color(0xFF374151),
+                    color: post.isSaved
+                        ? primaryColor
+                        : const Color(0xFF374151),
                     size: 26,
                   ),
                 ),
@@ -492,7 +555,10 @@ class _PostCardState extends State<PostCard> {
                   RichText(
                     text: TextSpan(
                       style: const TextStyle(
-                          fontSize: 13, color: Color(0xFF1F2937), height: 1.4),
+                        fontSize: 13,
+                        color: Color(0xFF1F2937),
+                        height: 1.4,
+                      ),
                       children: [
                         TextSpan(
                           text:
@@ -515,9 +581,10 @@ class _PostCardState extends State<PostCard> {
                           ? 'Lihat semua ${post.commentCount} komentar'
                           : 'Tambahkan komentar...',
                       style: const TextStyle(
-                          fontSize: 12,
-                          color: mutedColor,
-                          fontWeight: FontWeight.w500),
+                        fontSize: 12,
+                        color: mutedColor,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),

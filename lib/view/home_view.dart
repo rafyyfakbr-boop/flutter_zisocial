@@ -59,16 +59,15 @@ class _HomeViewState extends State<HomeView> {
   void _openCreatePost() async {
     await Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => const CreatePostView(),
-      ),
+      MaterialPageRoute(builder: (_) => const CreatePostView()),
     );
 
     // Refresh feed postingan setelah kembali dari create post
     if (mounted) {
-      context
-          .read<PostViewModel>()
-          .fetchPosts(isRefresh: true, userId: _currentUserId);
+      context.read<PostViewModel>().fetchPosts(
+        isRefresh: true,
+        userId: _currentUserId,
+      );
     }
   }
 
@@ -84,11 +83,8 @@ class _HomeViewState extends State<HomeView> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => FollowListView(
-          userId: userId,
-          username: username,
-          initialTab: tab,
-        ),
+        builder: (_) =>
+            FollowListView(userId: userId, username: username, initialTab: tab),
       ),
     );
     // Angka bisa berubah jika user follow/unfollow dari daftar
@@ -107,9 +103,7 @@ class _HomeViewState extends State<HomeView> {
 
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(
-        builder: (_) => const LoginView(),
-      ),
+      MaterialPageRoute(builder: (_) => const LoginView()),
       (route) => false,
     );
   }
@@ -160,9 +154,9 @@ class _HomeViewState extends State<HomeView> {
                   onPressed: () {
                     setState(() => _selectedTab = 3);
                     if (_currentUserId != 0) {
-                      context
-                          .read<MessageViewModel>()
-                          .fetchConversations(_currentUserId);
+                      context.read<MessageViewModel>().fetchConversations(
+                        _currentUserId,
+                      );
                     }
                   },
                   icon: const Icon(
@@ -177,7 +171,9 @@ class _HomeViewState extends State<HomeView> {
                     top: 6,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 5, vertical: 1.5),
+                        horizontal: 5,
+                        vertical: 1.5,
+                      ),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
                           colors: [Color(0xFF7C3AED), Color(0xFF06B6D4)],
@@ -199,10 +195,7 @@ class _HomeViewState extends State<HomeView> {
             ),
             PopupMenuButton<String>(
               tooltip: 'Menu akun',
-              icon: const Icon(
-                Icons.more_vert,
-                color: Color(0xFF374151),
-              ),
+              icon: const Icon(Icons.more_vert, color: Color(0xFF374151)),
               onSelected: (value) {
                 if (value == 'create') {
                   _openCreatePost();
@@ -213,18 +206,12 @@ class _HomeViewState extends State<HomeView> {
                 }
               },
               itemBuilder: (_) => const [
-                PopupMenuItem(
-                  value: 'create',
-                  child: Text('Buat postingan'),
-                ),
+                PopupMenuItem(value: 'create', child: Text('Buat postingan')),
                 PopupMenuItem(
                   value: 'edit_profile',
                   child: Text('Edit profil'),
                 ),
-                PopupMenuItem(
-                  value: 'logout',
-                  child: Text('Logout'),
-                ),
+                PopupMenuItem(value: 'logout', child: Text('Logout')),
               ],
             ),
           ],
@@ -284,12 +271,14 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-
   Widget _buildHomeFeed(dynamic user) {
     final postViewModel = context.watch<PostViewModel>();
 
     return RefreshIndicator(
-      onRefresh: () => context.read<PostViewModel>().fetchPosts(isRefresh: true, userId: _currentUserId),
+      onRefresh: () => context.read<PostViewModel>().fetchPosts(
+        isRefresh: true,
+        userId: _currentUserId,
+      ),
       color: primaryColor,
       child: ListView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -300,10 +289,7 @@ class _HomeViewState extends State<HomeView> {
             height: 116,
             child: ListView(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 14,
-                vertical: 8,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               children: [
                 _YourStory(
                   name: user?.username?.isNotEmpty == true
@@ -318,9 +304,7 @@ class _HomeViewState extends State<HomeView> {
                     );
                   },
                 ),
-                ..._stories.map(
-                  (story) => _StoryAvatar(story: story),
-                ),
+                ..._stories.map((story) => _StoryAvatar(story: story)),
               ],
             ),
           ),
@@ -369,8 +353,9 @@ class _HomeViewState extends State<HomeView> {
                     ),
                     const SizedBox(height: 16),
                     ElevatedButton.icon(
-                      onPressed: () =>
-                          context.read<PostViewModel>().fetchPosts(userId: _currentUserId),
+                      onPressed: () => context.read<PostViewModel>().fetchPosts(
+                        userId: _currentUserId,
+                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryColor,
                         foregroundColor: Colors.white,
@@ -423,10 +408,7 @@ class _HomeViewState extends State<HomeView> {
           // 4. Feed Postingan dari API
           else
             ...postViewModel.posts.map(
-              (post) => PostCard(
-                key: ValueKey(post.id),
-                post: post,
-              ),
+              (post) => PostCard(key: ValueKey(post.id), post: post),
             ),
 
           const SizedBox(height: 80),
@@ -502,8 +484,8 @@ class _HomeViewState extends State<HomeView> {
                   padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    gradient: avatarUrl.isNotEmpty &&
-                            avatarUrl.startsWith('http')
+                    gradient:
+                        avatarUrl.isNotEmpty && avatarUrl.startsWith('http')
                         ? const LinearGradient(
                             colors: [
                               Color(0xFF4F46E5),
@@ -614,7 +596,10 @@ class _HomeViewState extends State<HomeView> {
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 10),
                         ),
-                        icon: const Icon(Icons.add_photo_alternate_outlined, size: 18),
+                        icon: const Icon(
+                          Icons.add_photo_alternate_outlined,
+                          size: 18,
+                        ),
                         label: const Text(
                           'Post',
                           style: TextStyle(fontWeight: FontWeight.w600),
@@ -631,7 +616,9 @@ class _HomeViewState extends State<HomeView> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 16),
+                          vertical: 10,
+                          horizontal: 16,
+                        ),
                       ),
                       child: const Icon(Icons.logout, size: 18),
                     ),
@@ -697,8 +684,8 @@ class _HomeViewState extends State<HomeView> {
                       _profileSubTab == 0
                           ? Icons.photo_library_outlined
                           : (_profileSubTab == 1
-                              ? Icons.bookmark_border_rounded
-                              : Icons.favorite_border_rounded),
+                                ? Icons.bookmark_border_rounded
+                                : Icons.favorite_border_rounded),
                       size: 56,
                       color: Colors.grey.shade400,
                     ),
@@ -707,8 +694,8 @@ class _HomeViewState extends State<HomeView> {
                       _profileSubTab == 0
                           ? 'Belum Ada Postingan'
                           : (_profileSubTab == 1
-                              ? 'Belum Ada Favorit'
-                              : 'Belum Ada yang Disukai'),
+                                ? 'Belum Ada Favorit'
+                                : 'Belum Ada yang Disukai'),
                       style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
@@ -720,8 +707,8 @@ class _HomeViewState extends State<HomeView> {
                       _profileSubTab == 0
                           ? 'Bagikan momen pertamamu!'
                           : (_profileSubTab == 1
-                              ? 'Tekan ikon bookmark pada postingan untuk menyimpannya ke favorit.'
-                              : 'Postingan yang kamu sukai akan muncul di sini.'),
+                                ? 'Tekan ikon bookmark pada postingan untuk menyimpannya ke favorit.'
+                                : 'Postingan yang kamu sukai akan muncul di sini.'),
                       textAlign: TextAlign.center,
                       style: const TextStyle(color: mutedColor, fontSize: 13),
                     ),
@@ -734,59 +721,54 @@ class _HomeViewState extends State<HomeView> {
           SliverPadding(
             padding: const EdgeInsets.all(2),
             sliver: SliverGrid(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final post = displayedPosts[index];
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => PostDetailView(post: post),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.all(1.5),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFF3F4F6),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final post = displayedPosts[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => PostDetailView(post: post),
                       ),
-                      child: post.fullImageUrl.isNotEmpty
-                          ? Image.network(
-                              post.fullImageUrl,
-                              headers: const {
-                                'ngrok-skip-browser-warning': 'true',
-                              },
-                              fit: BoxFit.cover,
-                              loadingBuilder: (ctx, child, prog) {
-                                if (prog == null) return child;
-                                return const Center(
-                                  child: CircularProgressIndicator(
-                                    color: primaryColor,
-                                    strokeWidth: 2,
-                                  ),
-                                );
-                              },
-                              errorBuilder: (ctx, _, e) => const Center(
-                                child: Icon(
-                                  Icons.broken_image_outlined,
-                                  color: mutedColor,
-                                  size: 28,
+                    );
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(1.5),
+                    decoration: const BoxDecoration(color: Color(0xFFF3F4F6)),
+                    child: post.fullImageUrl.isNotEmpty
+                        ? Image.network(
+                            post.fullImageUrl,
+                            headers: const {
+                              'ngrok-skip-browser-warning': 'true',
+                            },
+                            fit: BoxFit.cover,
+                            loadingBuilder: (ctx, child, prog) {
+                              if (prog == null) return child;
+                              return const Center(
+                                child: CircularProgressIndicator(
+                                  color: primaryColor,
+                                  strokeWidth: 2,
                                 ),
-                              ),
-                            )
-                          : const Center(
+                              );
+                            },
+                            errorBuilder: (ctx, _, e) => const Center(
                               child: Icon(
-                                Icons.image_not_supported_outlined,
+                                Icons.broken_image_outlined,
                                 color: mutedColor,
                                 size: 28,
                               ),
                             ),
-                    ),
-                  );
-                },
-                childCount: displayedPosts.length,
-              ),
+                          )
+                        : const Center(
+                            child: Icon(
+                              Icons.image_not_supported_outlined,
+                              color: mutedColor,
+                              size: 28,
+                            ),
+                          ),
+                  ),
+                );
+              }, childCount: displayedPosts.length),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 crossAxisSpacing: 0,
@@ -874,12 +856,8 @@ class StoryItem {
   final String username;
   final Color color;
 
-  const StoryItem({
-    required this.username,
-    required this.color,
-  });
+  const StoryItem({required this.username, required this.color});
 }
-
 
 class _Avatar extends StatelessWidget {
   final String imageUrl;
@@ -895,7 +873,9 @@ class _Avatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final resolvedUrl = ApiConstants.getImageUrl(imageUrl);
-    final isValid = resolvedUrl.startsWith('http') && !resolvedUrl.contains('url-ke-gambar.com');
+    final isValid =
+        resolvedUrl.startsWith('http') &&
+        !resolvedUrl.contains('url-ke-gambar.com');
 
     return CircleAvatar(
       radius: size / 2,
@@ -957,11 +937,7 @@ class _YourStory extends StatelessWidget {
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.white, width: 2),
                     ),
-                    child: const Icon(
-                      Icons.add,
-                      size: 17,
-                      color: Colors.white,
-                    ),
+                    child: const Icon(Icons.add, size: 17, color: Colors.white),
                   ),
                 ),
               ],
@@ -1029,10 +1005,7 @@ class _StoryAvatar extends StatelessWidget {
               story.username,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w500,
-              ),
+              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
             ),
           ),
         ],
@@ -1040,7 +1013,6 @@ class _StoryAvatar extends StatelessWidget {
     );
   }
 }
-
 
 // ── Widget _ProfileStat ────────────────────────────────────────────────────
 class _ProfileStat extends StatelessWidget {

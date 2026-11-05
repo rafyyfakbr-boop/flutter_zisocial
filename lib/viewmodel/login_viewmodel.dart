@@ -16,10 +16,7 @@ class LoginViewModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   UserModel? get user => _user;
 
-  Future<bool> login({
-    required String email,
-    required String password,
-  }) async {
+  Future<bool> login({required String email, required String password}) async {
     _isLoading = true;
     _errorMessage = null;
 
@@ -28,18 +25,12 @@ class LoginViewModel extends ChangeNotifier {
     try {
       final response = await _apiClient.post(
         ApiConstants.login,
-        body: {
-          'email': email,
-          'password': password,
-        },
+        body: {'email': email, 'password': password},
       );
       _user = UserModel.fromJson(response['user']);
       return true;
     } catch (e) {
-      _errorMessage = e.toString().replaceFirst(
-            'Exception: ',
-            '',
-          );
+      _errorMessage = e.toString().replaceFirst('Exception: ', '');
       return false;
     } finally {
       _isLoading = false;

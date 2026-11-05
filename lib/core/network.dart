@@ -3,10 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class ApiClient {
-
-  Map<String, dynamic> _handleResponse(
-    http.Response response,
-  ) {
+  Map<String, dynamic> _handleResponse(http.Response response) {
     final data = jsonDecode(response.body);
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -74,7 +71,7 @@ class ApiClient {
 
     return _handleResponse(response);
   }
-  
+
   Future<Map<String, dynamic>> upload(
     String url, {
     required String filePath,
@@ -83,10 +80,7 @@ class ApiClient {
     required String fieldName,
     Map<String, String>? fields,
   }) async {
-    final request = http.MultipartRequest(
-      'POST',
-      Uri.parse(url),
-    );
+    final request = http.MultipartRequest('POST', Uri.parse(url));
 
     request.headers['ngrok-skip-browser-warning'] = 'true';
 
@@ -99,12 +93,7 @@ class ApiClient {
         ),
       );
     } else {
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          fieldName,
-          filePath,
-        ),
-      );
+      request.files.add(await http.MultipartFile.fromPath(fieldName, filePath));
     }
 
     if (fields != null) {
@@ -113,11 +102,8 @@ class ApiClient {
 
     final streamedResponse = await request.send();
 
-    final response = await http.Response.fromStream(
-      streamedResponse,
-    );
+    final response = await http.Response.fromStream(streamedResponse);
 
     return _handleResponse(response);
   }
 }
-

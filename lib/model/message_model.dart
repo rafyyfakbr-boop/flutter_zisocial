@@ -62,6 +62,10 @@ class DirectMessageModel {
   final int senderId;
   final int receiverId;
   final String text;
+  final int? replyToId;
+  final String? replyToText;
+  final int? replyToSenderId;
+  final bool isEdited;
   final bool isRead;
   final String createDate;
 
@@ -70,16 +74,65 @@ class DirectMessageModel {
     required this.senderId,
     required this.receiverId,
     required this.text,
+    this.replyToId,
+    this.replyToText,
+    this.replyToSenderId,
+    this.isEdited = false,
     required this.isRead,
     required this.createDate,
   });
 
+  DirectMessageModel copyWith({
+    int? id,
+    int? senderId,
+    int? receiverId,
+    String? text,
+    int? replyToId,
+    String? replyToText,
+    int? replyToSenderId,
+    bool? isEdited,
+    bool? isRead,
+    String? createDate,
+  }) {
+    return DirectMessageModel(
+      id: id ?? this.id,
+      senderId: senderId ?? this.senderId,
+      receiverId: receiverId ?? this.receiverId,
+      text: text ?? this.text,
+      replyToId: replyToId ?? this.replyToId,
+      replyToText: replyToText ?? this.replyToText,
+      replyToSenderId: replyToSenderId ?? this.replyToSenderId,
+      isEdited: isEdited ?? this.isEdited,
+      isRead: isRead ?? this.isRead,
+      createDate: createDate ?? this.createDate,
+    );
+  }
+
   factory DirectMessageModel.fromJson(Map<String, dynamic> json) {
+    final rawReplyId = json['reply_to_id'];
+    final parsedReplyId = rawReplyId != null
+        ? int.tryParse(rawReplyId.toString())
+        : null;
+
+    final rawReplySender = json['reply_to_sender_id'];
+    final parsedReplySender = rawReplySender != null
+        ? int.tryParse(rawReplySender.toString())
+        : null;
+
     return DirectMessageModel(
       id: int.tryParse(json['id']?.toString() ?? '0') ?? 0,
       senderId: int.tryParse(json['sender_id']?.toString() ?? '0') ?? 0,
       receiverId: int.tryParse(json['receiver_id']?.toString() ?? '0') ?? 0,
       text: json['text']?.toString() ?? '',
+      replyToId: (parsedReplyId != null && parsedReplyId > 0)
+          ? parsedReplyId
+          : null,
+      replyToText: json['reply_to_text']?.toString(),
+      replyToSenderId: (parsedReplySender != null && parsedReplySender > 0)
+          ? parsedReplySender
+          : null,
+      isEdited:
+          json['is_edited'] == true || json['is_edited']?.toString() == '1',
       isRead: json['is_read'] == true || json['is_read']?.toString() == '1',
       createDate: json['create_date']?.toString() ?? '',
     );
@@ -95,4 +148,3 @@ class DirectMessageModel {
     }
   }
 }
-
