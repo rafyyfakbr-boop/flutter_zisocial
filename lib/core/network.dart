@@ -27,8 +27,8 @@ class ApiClient {
     final response = await http.get(
       Uri.parse(url),
       headers: {
-        'Content-Type': 'application/json',
-        'ngrok-skip-browser-warning': 'true',
+        if (!kIsWeb) 'Content-Type': 'application/json',
+        if (!kIsWeb) 'ngrok-skip-browser-warning': 'true',
         ...?headers,
       },
     );
@@ -45,7 +45,7 @@ class ApiClient {
       Uri.parse(url),
       headers: {
         'Content-Type': 'application/json',
-        'ngrok-skip-browser-warning': 'true',
+        if (!kIsWeb) 'ngrok-skip-browser-warning': 'true',
         ...?headers,
       },
       body: jsonEncode(body),
@@ -63,7 +63,7 @@ class ApiClient {
       Uri.parse(url),
       headers: {
         'Content-Type': 'application/json',
-        'ngrok-skip-browser-warning': 'true',
+        if (!kIsWeb) 'ngrok-skip-browser-warning': 'true',
         ...?headers,
       },
       body: body != null ? jsonEncode(body) : null,
@@ -82,7 +82,9 @@ class ApiClient {
   }) async {
     final request = http.MultipartRequest('POST', Uri.parse(url));
 
-    request.headers['ngrok-skip-browser-warning'] = 'true';
+    if (!kIsWeb) {
+      request.headers['ngrok-skip-browser-warning'] = 'true';
+    }
 
     if (kIsWeb && fileBytes != null) {
       request.files.add(

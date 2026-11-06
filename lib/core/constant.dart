@@ -1,6 +1,9 @@
+import 'package:flutter/foundation.dart';
+
 class ApiConstants {
-  static String baseUrl =
-      'https://iodize-tiny-icky.ngrok-free.dev/ziesocial/api';
+  static String baseUrl = kIsWeb
+      ? 'http://localhost/ziesocial/api'
+      : 'https://iodize-tiny-icky.ngrok-free.dev/ziesocial/api';
 
   static String get login => '$baseUrl/auth/login.php';
   static String get register => '$baseUrl/auth/register.php';
